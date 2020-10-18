@@ -1,10 +1,10 @@
 import time
 from json import loads as json_loads
-from os import path as os_path
+from os import path as os_path, getenv
 from sys import exit as sys_exit
 from getpass import getpass
+import re
 
-from lxml import etree
 from requests import session
 
 class Fudan:
@@ -54,8 +54,6 @@ class Fudan:
         """
         page_login = self._page_init()
 
-        print("parsing Login page——", end="")
-        html = etree.HTML(page_login, etree.HTMLParser())
 
         print("getting tokens")
         data = {
@@ -65,11 +63,12 @@ class Fudan:
         }
 
         # 获取登录页上的令牌
+        result = re.findall('<input type="hidden" name="([a-zA-Z0-9\-_]+)" value="([a-zA-Z0-9\-_]+)"/?>', page_login)
+        # print(result)
+        # result 是一个列表，列表中的每一项是包含 name 和 value 的 tuple，例如
+        # [('lt', 'LT-6711210-Ia3WttcMvLBWNBygRNHdNzHzB49jlQ1602983174755-7xmC-cas'), ('dllt', 'userNamePasswordLogin'), ('execution', 'e1s1'), ('_eventId', 'submit'), ('rmShown', '1')]
         data.update(
-                zip(
-                        html.xpath("/html/body/form/input/@name"),
-                        html.xpath("/html/body/form/input/@value")
-                )
+            result
         )
 
         headers = {
@@ -109,7 +108,7 @@ class Fudan:
         else:
             print("◉登出异常")
 
-    def close(self):
+    def close(self, exit_code=0):
         """
         执行登出并关闭会话
         """
@@ -117,8 +116,7 @@ class Fudan:
         self.session.close()
         print("◉关闭会话")
         print("************************")
-        input("回车键退出")
-        sys_exit()
+        sys_exit(exit_code)
 
 class Zlapp(Fudan):
     last_info = ''
@@ -175,7 +173,6 @@ class Zlapp(Fudan):
                     "area"    : " ".join((province, city, district))
                 }
         )
-        # print(self.last_info)
 
         save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
@@ -190,6 +187,11 @@ def get_account():
     """
     获取账号信息
     """
+    uid = getenv("STD_ID")
+    psw = getenv("PASSWORD")
+    if uid != None and psw != None:
+        print("从环境变量中获取了用户名和密码！")
+        return uid, psw
     print("\n\n请仔细阅读以下日志！！\n请仔细阅读以下日志！！！！\n请仔细阅读以下日志！！！！！！\n\n")
     if os_path.exists("account.txt"):
         print("读取账号中……")
@@ -223,5 +225,4 @@ if __name__ == '__main__':
     daily_fudan.checkin()
     # 再检查一遍
     daily_fudan.check()
-
-    daily_fudan.close()
+    daily_fudan.close(1)
