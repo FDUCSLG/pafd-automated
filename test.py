@@ -223,5 +223,5 @@ if __name__ == '__main__':
     daily_fudan.login()
 
     daily_fudan.check()
-    time.sleep(5)
-    daily_fudan.close(1)
+    time.sleep(2)
+    daily_fudan.close()
