@@ -7,7 +7,7 @@ on:
     branches: [ master ]
   schedule:
     # run every 10 a.m., which is UTC 2 a.m + 8
-    - cron:  '0 2 * * *'
+    - cron:  '0 1 * * *'
   workflow_dispatch:
 
 jobs:
