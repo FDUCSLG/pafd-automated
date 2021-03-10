@@ -147,7 +147,7 @@ class Zlapp(Fudan):
             self.close()
         else:
             print("\n\n*******未提交*******")
-            self.last_info = last_info["d"]["info"]
+            self.last_info = last_info["d"]["oldInfo"]
 
     def checkin(self):
         """
