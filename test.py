@@ -130,8 +130,8 @@ class Zlapp(Fudan):
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
         last_info = get_info.json()
         print(last_info["d"]["info"])
-        print("\n")
-        print(last_info["d"]["oldInfo"])
+        #print("\n")
+        #print(last_info["d"]["oldInfo"])
         #print("◉上一次提交日期为:", last_info["d"]["oldInfo"]["date"])
 
         #position = last_info["d"]["info"]['geo_api_info']
@@ -142,12 +142,12 @@ class Zlapp(Fudan):
 
         today = time.strftime("%Y%m%d", time.localtime())
 
-        if last_info["d"]["oldInfo"]["date"] == today:
+        if last_info["d"]["info"]["date"] == today:
             print("\n*******今日已提交*******")
             self.close()
         else:
             print("\n\n*******未提交*******")
-            self.last_info = last_info["d"]["oldInfo"]
+            self.last_info = last_info["d"]["info"]
 
     def checkin(self):
         """
@@ -223,5 +223,7 @@ if __name__ == '__main__':
     daily_fudan.login()
 
     daily_fudan.check()
+    daily_fudan.checkin()
     time.sleep(2)
+    daily_fudan.check()
     daily_fudan.close()
