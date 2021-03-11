@@ -135,7 +135,7 @@ class Zlapp(Fudan):
         position = last_info["d"]["oldInfo"]['geo_api_info']
         position = json_loads(position)
 
-        print("◉上一次提交地址为:", position['address'])
+        print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
 
         today = time.strftime("%Y%m%d", time.localtime())
@@ -163,7 +163,7 @@ class Zlapp(Fudan):
 
         geo_api_info = json_loads(self.last_info["geo_api_info"])
         province = geo_api_info["addressComponent"].get("province", "")
-        city = json_loads(self.last_info["city"])
+        city = self.last_info["city"]
         district = geo_api_info["addressComponent"].get("district", "")
         self.last_info.update(
                 {
