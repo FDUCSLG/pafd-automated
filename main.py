@@ -145,7 +145,7 @@ class Zlapp(Fudan):
             self.close()
         else:
             print("\n\n*******未提交*******")
-            self.last_info = last_info["d"]["info"]
+            self.last_info = last_info["d"]["oldInfo"]
 
     def checkin(self):
         """
@@ -162,8 +162,8 @@ class Zlapp(Fudan):
         print("\n\n◉◉提交中")
 
         geo_api_info = json_loads(self.last_info["geo_api_info"])
-        province = geo_api_info["addressComponent"].get("province", "")
-        city = geo_api_info["addressComponent"].get("city", "")
+        province = self.last_info["province"]
+        city = self.last_info["city"]
         district = geo_api_info["addressComponent"].get("district", "")
         self.last_info.update(
                 {
