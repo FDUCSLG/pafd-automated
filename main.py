@@ -182,7 +182,7 @@ class Zlapp(Fudan):
 
         print("\n\n◉◉提交中")
 
-        geo_api_info = json_loads(self.last_info["geo_api_info"])
+        #geo_api_info = json_loads(self.last_info["geo_api_info"])
         province = self.last_info["province"]
         city = self.last_info["city"]
         xs_sfdyz = self.last_info["xs_sfdyz"]
@@ -191,7 +191,7 @@ class Zlapp(Fudan):
         xs_sfdez = self.last_info["xs_sfdez"]
         xs_dezdd = self.last_info["xs_dezdd"]
         xs_dezdd_text = self.last_info["xs_dezdd_text"]
-        district = geo_api_info["addressComponent"].get("district", "")
+        #district = geo_api_info["addressComponent"].get("district", "")
         self.last_info.update()
 
         
