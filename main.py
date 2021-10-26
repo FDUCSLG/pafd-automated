@@ -185,7 +185,7 @@ class Zlapp(Fudan):
         province = self.last_info["province"]
         city = self.last_info["city"]
 	
-	xs_sfdyz = self.last_info["xs_sfdyz"]		
+	xs_sfdyz = self.last_info["xs_sfdyz"]	
 	xs_dyzdd = self.last_info["xs_dyzdd"]
 	xs_dyzdd_text = self.last_info["xs_dyzdd_text"]
 	xs_sfdez = self.last_info["xs_sfdez"]
@@ -201,21 +201,19 @@ class Zlapp(Fudan):
             print("◉验证码为:", code)
             self.last_info.update(
                 {
-                    "tw"            : "13",		
-		            "province"      : province,
-		            "city"          : city,
-		            #"area"          : " ".join((province, city, district)),
-		            "xs_sfdyz"      : xs_sfdyz,
-		            "xs_dyzdd"      : xs_dyzdd,
-		            "xs_dyzdd_text" : xs_dyzdd_text,
-		            "xs_sfdez"      : xs_sfdez,
-		            "xs_dezdd"      : xs_dezdd,
-		            "xs_dezdd_text" : xs_dezdd_text,
-                    "code": code,
-
-
-                }
-            )
+			"tw"            : "13",
+			"province"      : province,
+			"city"          : city,
+			#"area"          : " ".join((province, city, district)),
+			"xs_sfdyz"      : xs_sfdyz,
+			"xs_dyzdd"      : xs_dyzdd,
+			"xs_dyzdd_text" : xs_dyzdd_text,
+			"xs_sfdez"      : xs_sfdez,
+			"xs_dezdd"      : xs_dezdd,
+			"xs_dezdd_text" : xs_dezdd_text,
+			"code": code,
+		}
+	    )
             # print(self.last_info)
             save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
