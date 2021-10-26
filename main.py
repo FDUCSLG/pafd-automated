@@ -150,7 +150,7 @@ class Zlapp(Fudan):
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
 
-        today = time.strftime("%Y%m%d", time.time())
+        today = time.strftime("%Y%m%d", time.localtime())
         #if last_info["d"]["info"]["date"] == today:
            # print("\n*******今日已提交*******")
            # self.close()
