@@ -143,10 +143,10 @@ class Zlapp(Fudan):
 
         print("◉上一次提交日期为:", last_info["d"]["info"]["date"])
 
-        position = last_info["d"]["info"]['geo_api_info']
-        position = json_loads(position)
+        #position = last_info["d"]["info"]['geo_api_info']
+       # position = json_loads(position)
 
-        print("◉上一次提交地址为:", position['formattedAddress'])
+        #print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
         today = time.strftime("%Y%m%d", time.localtime())
@@ -184,7 +184,17 @@ class Zlapp(Fudan):
         geo_api_info = json_loads(self.last_info["geo_api_info"])
         province = self.last_info["province"]
         city = self.last_info["city"]
-        district = geo_api_info["addressComponent"].get("district", "")
+        #district = geo_api_info["addressComponent"].get("district", "")
+        
+        xs_sfdyz = self.last_info["xs_sfdyz"]		
+	xs_dyzdd = self.last_info["xs_dyzdd"]
+	xs_dyzdd_text = self.last_info["xs_dyzdd_text"]
+	xs_sfdez = self.last_info["xs_sfdez"]
+	xs_dezdd = self.last_info["xs_dezdd"]
+	xs_dezdd_text = self.last_info["xs_dezdd_text"]
+	district = geo_api_info["addressComponent"].get("district", "")
+	self.last_info.update()
+
         
         while(True):
             print("◉正在识别验证码......")
@@ -192,13 +202,18 @@ class Zlapp(Fudan):
             print("◉验证码为:", code)
             self.last_info.update(
                 {
-                    "tw": "13",
-                    "province": province,
-                    "city": city,
-                    "area": " ".join((province, city, district)),
-                    "sfzx": "1",  # 是否在校
-                    "fxyy": "",  # 返校原因
+                    "tw"            : "13",		
+		            "province"      : province,
+		            "city"          : city,
+		            #"area"          : " ".join((province, city, district)),
+		            "xs_sfdyz"      : xs_sfdyz,
+		            "xs_dyzdd"      : xs_dyzdd,
+		            "xs_dyzdd_text" : xs_dyzdd_text,
+		            "xs_sfdez"      : xs_sfdez,
+		            "xs_dezdd"      : xs_dezdd,
+		            "xs_dezdd_text" : xs_dezdd_text,
                     "code": code,
+
 
                 }
             )
