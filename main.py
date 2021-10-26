@@ -149,13 +149,12 @@ class Zlapp(Fudan):
         #print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
-        os.environ['TZ'] = 'EST+08EDT'
-        time.tzset()
+
         today = time.strftime("%Y%m%d", time.time())
-        if last_info["d"]["info"]["date"] == today:
-            print("\n*******今日已提交*******")
-            self.close()
-        else:
+        #if last_info["d"]["info"]["date"] == today:
+           # print("\n*******今日已提交*******")
+           # self.close()
+        #else:
             print("\n\n*******未提交*******")
             self.last_info = last_info["d"]["oldInfo"]
             
