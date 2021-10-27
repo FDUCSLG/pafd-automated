@@ -23,7 +23,7 @@ class Fudan:
 
     # 初始化会话
     def __init__(self,
-                 uid, psw,
+                 uid, psw, psh=None,
                  url_login='https://uis.fudan.edu.cn/authserver/login',
                  url_code="https://zlapp.fudan.edu.cn/backend/default/code"):
         """
@@ -132,6 +132,24 @@ class Fudan:
 class Zlapp(Fudan):
     last_info = ''
 
+    def notify(self, _title, _message=None):
+    if not PUSH_KEY:
+        print("未配置PUSH_KEY！")
+        return
+
+    if not _message:
+        _message = _title
+
+    print(_title)
+    print(_message)
+
+    _response = requests.post(f"https://sc.ftqq.com/{PUSH_KEY}.send", {"text": _title, "desp": _message})
+
+    if _response.status_code == 200:
+        print(f"发送通知状态：{_response.content.decode('utf-8')}")
+    else:
+        print(f"发送通知失败：{_response.status_code}")
+        
     def check(self):
         """
         检查
@@ -152,6 +170,7 @@ class Zlapp(Fudan):
         today = time.strftime("%Y%m%d", time.localtime())
         if last_info["d"]["info"]["date"] == today:
             print("\n*******今日已提交*******")
+            self.notify("今日已提交")
             self.close()
         else:
             print("\n\n*******未提交*******")
@@ -166,7 +185,7 @@ class Zlapp(Fudan):
     def validate_code(self):
         img = self.session.get(self.url_code).content
         return self.read_captcha(img)
-
+        
     def checkin(self):
         """
         提交
@@ -214,7 +233,6 @@ class Zlapp(Fudan):
             time.sleep(0.1)
             if(json_loads(save.text)["e"] != 1):
                 break
-            
 
 
 def get_account():
@@ -252,11 +270,12 @@ def get_account():
 
 if __name__ == '__main__':
     uid, psw = get_account()
+    psh = getenv("PUSH_KEY")
     # print(uid, psw)
     zlapp_login = 'https://uis.fudan.edu.cn/authserver/login?' \
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
-    daily_fudan = Zlapp(uid, psw,
+    daily_fudan = Zlapp(uid, psw, psh,
                         url_login=zlapp_login, url_code=code_url)
     daily_fudan.login()
 
