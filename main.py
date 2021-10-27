@@ -1,5 +1,7 @@
 import json
 import time
+from datetime import datetime
+import pytz
 from json import loads as json_loads
 from os import path as os_path, getenv
 from sys import exit as sys_exit
@@ -150,11 +152,12 @@ class Zlapp(Fudan):
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
 
-        today = time.strftime("%Y%m%d", time.localtime())
-        #if last_info["d"]["info"]["date"] == today:
-           # print("\n*******今日已提交*******")
-           # self.close()
-        #else:
+        today = datetime.now(pytz.timezone("Asia/Shanghai"))
+	
+        if last_info["d"]["info"]["date"] == today:
+            print("\n*******今日已提交*******")
+            self.close()
+        else:
         print("\n\n*******未提交*******")
         self.last_info = last_info["d"]["oldInfo"]
             
