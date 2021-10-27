@@ -39,6 +39,7 @@ class Fudan:
 
         self.uid = uid
         self.psw = psw
+        self.psh = psh
 
     def _page_init(self):
         """
@@ -133,22 +134,22 @@ class Zlapp(Fudan):
     last_info = ''
 
     def notify(self, _title, _message=None):
-    if not PUSH_KEY:
-        print("未配置PUSH_KEY！")
-        return
+        if not self.psh:
+            print("未配置PUSH_KEY！")
+            return
 
-    if not _message:
-        _message = _title
+        if not _message:
+            _message = _title
 
-    print(_title)
-    print(_message)
+        print(_title)
+        print(_message)
 
-    _response = requests.post(f"https://sc.ftqq.com/{PUSH_KEY}.send", {"text": _title, "desp": _message})
+        _response = post(f"https://sc.ftqq.com/{self.psh}.send", {"text": _title, "desp": _message})
 
-    if _response.status_code == 200:
-        print(f"发送通知状态：{_response.content.decode('utf-8')}")
-    else:
-        print(f"发送通知失败：{_response.status_code}")
+        if _response.status_code == 200:
+            print(f"发送通知状态：{_response.content.decode('utf-8')}")
+        else:
+            print(f"发送通知失败：{_response.status_code}")
         
     def check(self):
         """
