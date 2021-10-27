@@ -99,9 +99,9 @@ class Fudan:
         print("return status code", post.status_code)
 
         if post.status_code == 302:
-            print("\n***********************"
+            print("\n************************"
                   "\n◉登录成功"
-                  "\n***********************\n")
+                  "\n************************\n")
         else:
             print("◉登录失败，请检查账号信息")
             self.close()
