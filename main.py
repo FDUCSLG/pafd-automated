@@ -152,8 +152,10 @@ class Zlapp(Fudan):
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
 
-        today = datetime.now(pytz.timezone("Asia/Shanghai"))
-        print( "today is :", time.strftime("%Y%m%d", time.localtime()))
+        date = datetime.now(pytz.timezone("Asia/Shanghai"))
+        today = str(date.year) + str(date.month) + str(date.day)
+        print( "today in localtime is :", time.strftime("%Y%m%d", time.localtime()))
+        
         if last_info["d"]["info"]["date"] == today:
                 print("\n*******今日已提交*******")
                 self.close()
