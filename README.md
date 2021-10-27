@@ -1,21 +1,18 @@
-# 自动填写 PAFD
+# 自动平安复旦脚本 pafd-automated ⚙
+### 最新支持验证码的平安复旦脚本
 
-credit: 这份代码受 [daily_fudan](https://github.com/k652/daily_fudan) 启发，并参考了其实现方式，在此表示感谢。
+本仓库是原仓库 https://github.com/FDUCSLG/pafd-automated 的扩展版，添加了验证码识别模块，且无需第三方的账号，识别率目前仍然是100%
 
-首先请注册一个 GitHub 帐号，然后点击右上角的 fork 创建一个副本。
+使用 Github Action 实现 CI/CD，即每日自动化填报
 
-![fork](https://github.com/fducslg/pafd-automated/blob/master/docs/fork.png?raw=true)
+![](https://tva1.sinaimg.cn/large/008i3skNgy1gvtydb7os0j30pg0drwf7.jpg)
 
-然后在你 fork 的副本中，点击 Settings, Secrets 和 New secret
+目前使用 ```EasyOCR``` 模块进行验证码识别
 
-![create-secrets](https://github.com/fducslg/pafd-automated/blob/master/docs/create-secrets.png?raw=true)
+![](https://tva1.sinaimg.cn/large/008i3skNgy1gvtyc9lzodj30oy0l4tb5.jpg)
 
-然后创建两个值，Name 为 STD_ID 的在 Value 里填入学号
 
-![id](https://github.com/fducslg/pafd-automated/blob/master/docs/id.png?raw=true)
 
-![password](https://github.com/fducslg/pafd-automated/blob/master/docs/password.png?raw=true)
-
-Name 为 PASSWORD 的在 Value 里填入 UIS 密码。这里可以不用担心安全性问题，这些 scecrets 的值只有你能看见，此外因为背后是 GitHub 为你保障安全——GitHub 的安全性应该比复旦的 UIS 要高。
-
-通过 GitHub Action，每天十点会自动运行脚本帮你填写 PAFD，填写的地址是上一次的位置，从而你再也不用担心被辅导员催啦~
+- **部署教程**
+查看 [教程](https://github.com/ZiYang-xie/pafd-automated/tree/master/docs)
+  

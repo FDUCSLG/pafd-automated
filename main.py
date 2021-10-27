@@ -220,7 +220,6 @@ class Zlapp(Fudan):
                     #"sfzx": "1",  # 是否在校
                     #"fxyy": "",  # 返校原因
                     "code": code,
-
                 }
             )
             # print(self.last_info)
