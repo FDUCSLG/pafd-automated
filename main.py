@@ -153,7 +153,7 @@ class Zlapp(Fudan):
         # print(last_info)
 
         today = datetime.now(pytz.timezone("Asia/Shanghai"))
-	
+	print( "today is :", time.strftime("%Y%m%d", time.localtime()))
         if last_info["d"]["info"]["date"] == today:
                 print("\n*******今日已提交*******")
                 self.close()
