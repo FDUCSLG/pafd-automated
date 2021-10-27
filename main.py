@@ -157,9 +157,9 @@ class Zlapp(Fudan):
         if last_info["d"]["info"]["date"] == today:
                 print("\n*******今日已提交*******")
                 self.close()
-	else:
-		print("\n\n*******未提交*******")
-		self.last_info = last_info["d"]["oldInfo"]
+        else:
+                print("\n\n*******未提交*******")
+                self.last_info = last_info["d"]["oldInfo"]
             
     def read_captcha(self, img_byte):
         image = numpy.array(Image.open(io.BytesIO(img_byte)))
