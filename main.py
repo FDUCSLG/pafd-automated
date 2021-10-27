@@ -171,7 +171,7 @@ class Zlapp(Fudan):
         today = time.strftime("%Y%m%d", time.localtime())
         if last_info["d"]["info"]["date"] == today:
             print("\n*******今日已提交*******")
-            self.notify("今日已提交")
+            self.notify(f"平安复旦：今日已提交\n打卡地点:{position['formattedAddress']}")
             self.close()
         else:
             print("\n\n*******未提交*******")
@@ -242,30 +242,6 @@ def get_account():
     """
     uid = getenv("STD_ID")
     psw = getenv("PASSWORD")
-    if uid != None and psw != None:
-        print("从环境变量中获取了用户名和密码！")
-        return uid, psw
-    print("\n\n请仔细阅读以下日志！！\n请仔细阅读以下日志！！！！\n请仔细阅读以下日志！！！！！！\n\n")
-    if os_path.exists("account.txt"):
-        print("读取账号中……")
-        with open("account.txt", "r") as old:
-            raw = old.readlines()
-        if (raw[0][:3] != "uid") or (len(raw[0]) < 10):
-            print("account.txt 内容无效, 请手动修改内容")
-            sys_exit()
-        uid = (raw[0].split(":"))[1].strip()
-        psw = (raw[1].split(":"))[1].strip()
-
-    else:
-        print("未找到account.txt, 判断为首次运行, 请接下来依次输入学号密码")
-        uid = input("学号：")
-        psw = getpass("密码：")
-        with open("account.txt", "w") as new:
-            tmp = "uid:" + uid + "\npsw:" + psw +\
-                "\n\n\n以上两行冒号后分别写上学号密码，不要加空格/换行，谢谢\n\n请注意文件安全，不要放在明显位置\n\n可以从dailyFudan.exe创建快捷方式到桌面"
-            new.write(tmp)
-        print("账号已保存在目录下account.txt，请注意文件安全，不要放在明显位置\n\n建议拉个快捷方式到桌面")
-
     return uid, psw
 
 
