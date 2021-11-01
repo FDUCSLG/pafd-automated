@@ -154,8 +154,9 @@ class Zlapp(Fudan):
 
         date = datetime.now(pytz.timezone("Asia/Shanghai"))
         today = str(date.year) + str(date.month) + str(date.day)
-        print( "today in localtime is :", time.strftime("%Y%m%d", time.localtime()))
-        
+        %print( "today in localtime is :", time.strftime("%Y%m%d", time.localtime()))
+        print( "today in Shanghai timezone is :", today)
+	
         if last_info["d"]["info"]["date"] == today:
                 print("\n*******今日已提交*******")
                 self.close()
