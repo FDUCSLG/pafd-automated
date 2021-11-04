@@ -36,7 +36,7 @@ class Fudan:
         :param url_login: 登录页，默认服务为空
         """
         self.session = session()
-	self.session.keep_alive = False
+        self.session.keep_alive = False
         self.session.headers['User-Agent'] = self.UA
         self.url_login = url_login
         self.url_code = url_code
@@ -153,11 +153,11 @@ class Zlapp(Fudan):
         #print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
-	
-	# 改为上海时区
+        
+        # 改为上海时区
         os.environ['TZ'] = 'Asia/Shanghai'
         time.tzset()
-	today = time.strftime("%Y%m%d", time.localtime())
+        today = time.strftime("%Y%m%d", time.localtime())
         print("◉今日日期为:", today)
         
         if last_info["d"]["info"]["date"] == today:
@@ -168,7 +168,7 @@ class Zlapp(Fudan):
                 self.last_info = last_info["d"]["oldInfo"]
             
     def read_captcha(self, img_byte):
-	img = Image.open(io.BytesIO(img_byte)).convert('L')
+        img = Image.open(io.BytesIO(img_byte)).convert('L')
         enh_bri = ImageEnhance.Brightness(img)
         new_img = enh_bri.enhance(factor=1.5)
 
