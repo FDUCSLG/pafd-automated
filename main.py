@@ -18,6 +18,7 @@ from requests import session, post, adapters
 adapters.DEFAULT_RETRIES = 5
 
 
+
 class Fudan:
     """
     建立与复旦服务器的会话，执行登录/登出操作
@@ -159,6 +160,7 @@ class Zlapp(Fudan):
         time.tzset()
         today = time.strftime("%Y%m%d", time.localtime())
         print("◉今日日期为:", today)
+
         
         if last_info["d"]["info"]["date"] == today:
                 print("\n*******今日已提交*******")
@@ -185,6 +187,7 @@ class Zlapp(Fudan):
                                 free_list=free_list[0],
                                 detail = 0)
         return result[0]
+    
 
     def validate_code(self):
         img = self.session.get(self.url_code).content
@@ -223,6 +226,7 @@ class Zlapp(Fudan):
             print("◉验证码为:", code)
             self.last_info.update(
                 {
+
 			"tw"            : "13",
 			"province"      : province,
 			"city"          : city,
@@ -236,6 +240,7 @@ class Zlapp(Fudan):
 			"code": code,
 		}
 	    )
+
             # print(self.last_info)
             save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
@@ -248,8 +253,6 @@ class Zlapp(Fudan):
             time.sleep(0.1)
             if(json_loads(save.text)["e"] != 1):
                 break
-            
-
 
 def get_account():
     """
