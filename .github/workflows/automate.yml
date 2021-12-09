@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-# run every 10 a.m., which is UTC 2 a.m + 8
     - cron:  '0 2 * * *'
   workflow_dispatch:
 
@@ -16,9 +15,15 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-
+  
       - name: Check out code
         uses: actions/checkout@v2
-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install easyocr pillow numpy
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
       - name: run
         run: STD_ID=${{ secrets.STD_ID }} PASSWORD=${{ secrets.PASSWORD }} python3 main.py

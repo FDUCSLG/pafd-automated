@@ -1,11 +1,20 @@
+import json
 import time
+import os
 from json import loads as json_loads
 from os import path as os_path, getenv
 from sys import exit as sys_exit
 from getpass import getpass
 import re
+import base64
+import easyocr
+import io
+import numpy
+from PIL import Image
+from PIL import ImageEnhance
 
-from requests import session
+from requests import session, post, adapters
+adapters.DEFAULT_RETRIES = 5
 
 class Fudan:
     """
@@ -16,7 +25,8 @@ class Fudan:
     # 初始化会话
     def __init__(self,
                  uid, psw,
-                 url_login='https://uis.fudan.edu.cn/authserver/login'):
+                 url_login='https://uis.fudan.edu.cn/authserver/login',
+                 url_code="https://zlapp.fudan.edu.cn/backend/default/code"):
         """
         初始化一个session，及登录信息
         :param uid: 学号
@@ -24,8 +34,10 @@ class Fudan:
         :param url_login: 登录页，默认服务为空
         """
         self.session = session()
+        self.session.keep_alive = False
         self.session.headers['User-Agent'] = self.UA
         self.url_login = url_login
+        self.url_code = url_code
 
         self.uid = uid
         self.psw = psw
@@ -54,16 +66,16 @@ class Fudan:
         """
         page_login = self._page_init()
 
-
         print("getting tokens")
         data = {
             "username": self.uid,
             "password": self.psw,
-            "service" : "https://zlapp.fudan.edu.cn/site/ncov/fudanDaily"
+            "service": "https://zlapp.fudan.edu.cn/site/ncov/fudanDaily"
         }
 
         # 获取登录页上的令牌
-        result = re.findall('<input type="hidden" name="([a-zA-Z0-9\-_]+)" value="([a-zA-Z0-9\-_]+)"/?>', page_login)
+        result = re.findall(
+            '<input type="hidden" name="([a-zA-Z0-9\-_]+)" value="([a-zA-Z0-9\-_]+)"/?>', page_login)
         # print(result)
         # result 是一个列表，列表中的每一项是包含 name 和 value 的 tuple，例如
         # [('lt', 'LT-6711210-Ia3WttcMvLBWNBygRNHdNzHzB49jlQ1602983174755-7xmC-cas'), ('dllt', 'userNamePasswordLogin'), ('execution', 'e1s1'), ('_eventId', 'submit'), ('rmShown', '1')]
@@ -72,18 +84,18 @@ class Fudan:
         )
 
         headers = {
-            "Host"      : "uis.fudan.edu.cn",
-            "Origin"    : "https://uis.fudan.edu.cn",
-            "Referer"   : self.url_login,
+            "Host": "uis.fudan.edu.cn",
+            "Origin": "https://uis.fudan.edu.cn",
+            "Referer": self.url_login,
             "User-Agent": self.UA
         }
 
         print("◉Login ing——", end="")
         post = self.session.post(
-                self.url_login,
-                data=data,
-                headers=headers,
-                allow_redirects=False)
+            self.url_login,
+            data=data,
+            headers=headers,
+            allow_redirects=False)
 
         print("return status code", post.status_code)
 
@@ -118,6 +130,7 @@ class Fudan:
         print("************************")
         sys_exit(exit_code)
 
+
 class Zlapp(Fudan):
     last_info = ''
 
@@ -127,7 +140,7 @@ class Zlapp(Fudan):
         """
         print("◉检测是否已提交")
         get_info = self.session.get(
-                'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
+            'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
         last_info = get_info.json()
 
         print("◉上一次提交日期为:", last_info["d"]["info"]["date"])
@@ -137,25 +150,53 @@ class Zlapp(Fudan):
 
         print("◉上一次提交地址为:", position['formattedAddress'])
         # print("◉上一次提交GPS为", position["position"])
-
+        # print(last_info)
+        
+        # 改为上海时区
+        os.environ['TZ'] = 'Asia/Shanghai'
+        time.tzset()
         today = time.strftime("%Y%m%d", time.localtime())
-
+        print("◉今日日期为:", today)
         if last_info["d"]["info"]["date"] == today:
             print("\n*******今日已提交*******")
             self.close()
         else:
             print("\n\n*******未提交*******")
             self.last_info = last_info["d"]["oldInfo"]
+            
+    def read_captcha(self, img_byte):
+        img = Image.open(io.BytesIO(img_byte)).convert('L')
+        enh_bri = ImageEnhance.Brightness(img)
+        new_img = enh_bri.enhance(factor=1.5)
+        
+        image = numpy.array(new_img)
+        reader = easyocr.Reader(['en'])
+        horizontal_list, free_list = reader.detect(image, optimal_num_chars=4)
+        character = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        allow_list = list(character)
+        allow_list.extend(list(character.lower()))
+    
+        result = reader.recognize(image, 
+                                allowlist=allow_list,
+                                horizontal_list=horizontal_list[0],
+                                free_list=free_list[0],
+                                detail = 0)
+        return result[0]
+    
+
+    def validate_code(self):
+        img = self.session.get(self.url_code).content
+        return self.read_captcha(img)
 
     def checkin(self):
         """
         提交
         """
         headers = {
-            "Host"      : "zlapp.fudan.edu.cn",
-            "Referer"   : "https://zlapp.fudan.edu.cn/site/ncov/fudanDaily?from=history",
-            "DNT"       : "1",
-            "TE"        : "Trailers",
+            "Host": "zlapp.fudan.edu.cn",
+            "Referer": "https://zlapp.fudan.edu.cn/site/ncov/fudanDaily?from=history",
+            "DNT": "1",
+            "TE": "Trailers",
             "User-Agent": self.UA
         }
 
@@ -164,36 +205,36 @@ class Zlapp(Fudan):
         geo_api_info = json_loads(self.last_info["geo_api_info"])
         province = self.last_info["province"]
         city = self.last_info["city"]
-        xs_sfdyz = self.last_info["xs_sfdyz"]
-        xs_dyzdd = self.last_info["xs_dyzdd"]
-        xs_dyzdd_text = self.last_info["xs_dyzdd_text"]
-        xs_sfdez = self.last_info["xs_sfdez"]
-        xs_dezdd = self.last_info["xs_dezdd"]
-        xs_dezdd_text = self.last_info["xs_dezdd_text"]
         district = geo_api_info["addressComponent"].get("district", "")
-        self.last_info.update(
+        
+        while(True):
+            print("◉正在识别验证码......")
+            code = self.validate_code()
+            print("◉验证码为:", code)
+            self.last_info.update(
                 {
-                    "tw"            : "13",
-                    "province"      : province,
-                    "city"          : city,
-                    "area"          : " ".join((province, city, district)),
-                    "xs_sfdyz"      : xs_sfdyz,
-                    "xs_dyzdd"      : xs_dyzdd,
-                    "xs_dyzdd_text" : xs_dyzdd_text,
-                    "xs_sfdez"      : xs_sfdez,
-                    "xs_dezdd"      : xs_dezdd,
-                    "xs_dezdd_text" : xs_dezdd_text
-                }
-        )
+                    "tw": "13",
+                    "province": province,
+                    "city": city,
+                    "area": " ".join((province, city, district)),
+                    #"sfzx": "1",  # 是否在校
+                    #"fxyy": "",  # 返校原因
+                    "code": code,
 
-        save = self.session.post(
+                }
+            )
+            # print(self.last_info)
+            save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
                 data=self.last_info,
                 headers=headers,
                 allow_redirects=False)
 
-        save_msg = json_loads(save.text)["m"]
-        print(save_msg, '\n\n')
+            save_msg = json_loads(save.text)["m"]
+            print(save_msg, '\n\n')
+            time.sleep(0.1)
+            if(json_loads(save.text)["e"] != 1):
+                break
 
 def get_account():
     """
@@ -220,17 +261,22 @@ def get_account():
         uid = input("学号：")
         psw = getpass("密码：")
         with open("account.txt", "w") as new:
-            tmp = "uid:" + uid + "\npsw:" + psw + "\n\n\n以上两行冒号后分别写上学号密码，不要加空格/换行，谢谢\n\n请注意文件安全，不要放在明显位置\n\n可以从dailyFudan.exe创建快捷方式到桌面"
+            tmp = "uid:" + uid + "\npsw:" + psw +\
+                "\n\n\n以上两行冒号后分别写上学号密码，不要加空格/换行，谢谢\n\n请注意文件安全，不要放在明显位置\n\n可以从dailyFudan.exe创建快捷方式到桌面"
             new.write(tmp)
         print("账号已保存在目录下account.txt，请注意文件安全，不要放在明显位置\n\n建议拉个快捷方式到桌面")
 
     return uid, psw
+
+
 if __name__ == '__main__':
     uid, psw = get_account()
     # print(uid, psw)
     zlapp_login = 'https://uis.fudan.edu.cn/authserver/login?' \
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
-    daily_fudan = Zlapp(uid, psw, url_login=zlapp_login)
+    code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
+    daily_fudan = Zlapp(uid, psw,
+                        url_login=zlapp_login, url_code=code_url)
     daily_fudan.login()
 
     daily_fudan.check()
