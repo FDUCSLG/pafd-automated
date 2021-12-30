@@ -12,6 +12,7 @@ import io
 import numpy
 from PIL import Image
 from PIL import ImageEnhance
+import ddddocr
 
 from requests import session, post, adapters
 adapters.DEFAULT_RETRIES = 5
@@ -165,6 +166,7 @@ class Zlapp(Fudan):
             self.last_info = last_info["d"]["oldInfo"]
             
     def read_captcha(self, img_byte):
+        '''
         img = Image.open(io.BytesIO(img_byte)).convert('L')
         enh_bri = ImageEnhance.Brightness(img)
         new_img = enh_bri.enhance(factor=1.5)
@@ -182,6 +184,12 @@ class Zlapp(Fudan):
                                 free_list=free_list[0],
                                 detail = 0)
         return result[0]
+        '''
+        ocr = ddddocr.DdddOcr()
+        with open(img_byte, 'rb') as f:
+        img_bytes = f.read()
+        res = ocr.classification(img_bytes)
+        return res
     
 
     def validate_code(self):
