@@ -188,9 +188,9 @@ class Zlapp(Fudan):
         ocr = ddddocr.DdddOcr()
         # img_bytes = Image.open(io.BytesIO(img_byte)).convert('L')
         # print(type(img_bytes))
-        with open(io.BytesIO(img_byte), 'rb') as f:
-            img_bytes = f.read()
-            res = ocr.classification(img_bytes)
+        #with open(io.BytesIO(img_byte), 'rb') as f:
+        #img_bytes = f.read()
+        res = ocr.classification(img_byte)
         return res
     
 
