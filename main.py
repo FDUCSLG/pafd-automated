@@ -34,7 +34,7 @@ class Fudan:
         :param url_login: 登录页，默认服务为空
         """
         self.session = session()
-        self.session.keep_alive = False
+        self.session.keep_alive = True # 改为持久链接
         self.session.headers['User-Agent'] = self.UA
         self.url_login = url_login
         self.url_code = url_code
