@@ -288,6 +288,6 @@ if __name__ == '__main__':
             daily_fudan.check()
             daily_fudan.close(1)
             break
-        except:
+        except TypeError:
             time.sleep(3)
     
