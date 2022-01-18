@@ -289,5 +289,5 @@ if __name__ == '__main__':
             daily_fudan.close(1)
             break
         except:
-            time.sleep(3000)
+            time.sleep(3)
     
