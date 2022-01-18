@@ -12,7 +12,7 @@ import io
 import numpy
 from PIL import Image
 from PIL import ImageEnhance
-
+from requests.exceptions import HTTPError
 from requests import session, post, adapters
 adapters.DEFAULT_RETRIES = 5
 
@@ -288,6 +288,6 @@ if __name__ == '__main__':
             daily_fudan.check()
             daily_fudan.close(1)
             break
-        except TypeError:
+        except HTTPError:
             time.sleep(3)
     
