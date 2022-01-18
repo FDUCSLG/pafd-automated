@@ -141,8 +141,8 @@ class Zlapp(Fudan):
         print("◉检测是否已提交")
         for i in range(5):
             try:
-            get_info = self.session.get(
-            'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
+                get_info = self.session.get(
+                'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
             except:
                 time.sleep(3)
         last_info = get_info.json()
