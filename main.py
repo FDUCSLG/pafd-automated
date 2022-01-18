@@ -276,7 +276,7 @@ if __name__ == '__main__':
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
 
-    for i in range(50):
+    for i in range(3):
         try:
             daily_fudan = Zlapp(uid, psw,
                         url_login=zlapp_login, url_code=code_url)
@@ -288,6 +288,6 @@ if __name__ == '__main__':
             daily_fudan.check()
             daily_fudan.close(1)
             break
-        except HTTPError:
+        except:
             time.sleep(3)
     
