@@ -139,8 +139,12 @@ class Zlapp(Fudan):
         检查
         """
         print("◉检测是否已提交")
-        get_info = self.session.get(
+        for i in range(5):
+            try:
+            get_info = self.session.get(
             'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
+            except:
+                time.sleep(3)
         last_info = get_info.json()
 
         print("◉上一次提交日期为:", last_info["d"]["info"]["date"])
@@ -275,19 +279,14 @@ if __name__ == '__main__':
     zlapp_login = 'https://uis.fudan.edu.cn/authserver/login?' \
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
+    daily_fudan = Zlapp(uid, psw,
+                url_login=zlapp_login, url_code=code_url)
+    daily_fudan.login()
 
-    for i in range(3):
-        try:
-            daily_fudan = Zlapp(uid, psw,
-                        url_login=zlapp_login, url_code=code_url)
-            daily_fudan.login()
+    daily_fudan.check()
+    daily_fudan.checkin()
+    # 再检查一遍
+    daily_fudan.check()
+    daily_fudan.close(1)
 
-            daily_fudan.check()
-            daily_fudan.checkin()
-            # 再检查一遍
-            daily_fudan.check()
-            daily_fudan.close(1)
-            break
-        except:
-            time.sleep(3)
     
