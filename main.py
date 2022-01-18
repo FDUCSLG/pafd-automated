@@ -275,12 +275,19 @@ if __name__ == '__main__':
     zlapp_login = 'https://uis.fudan.edu.cn/authserver/login?' \
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
-    daily_fudan = Zlapp(uid, psw,
-                        url_login=zlapp_login, url_code=code_url)
-    daily_fudan.login()
 
-    daily_fudan.check()
-    daily_fudan.checkin()
-    # 再检查一遍
-    daily_fudan.check()
-    daily_fudan.close(1)
+    while True:
+        try:
+            daily_fudan = Zlapp(uid, psw,
+                        url_login=zlapp_login, url_code=code_url)
+            daily_fudan.login()
+
+            daily_fudan.check()
+            daily_fudan.checkin()
+            # 再检查一遍
+            daily_fudan.check()
+            daily_fudan.close(1)
+            pass
+        except Exception, e:
+            time.sleep(3000)
+    
