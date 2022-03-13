@@ -12,7 +12,7 @@ import io
 import numpy
 from PIL import Image
 from PIL import ImageEnhance
-from requests.exceptions import HTTPError
+
 from requests import session, post, adapters
 adapters.DEFAULT_RETRIES = 5
 
@@ -139,21 +139,22 @@ class Zlapp(Fudan):
         检查
         """
         print("◉检测是否已提交")
-        for i in range(5):
-            try:
-                get_info = self.session.get(
-                'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
-            except:
-                time.sleep(3)
+        get_info = self.session.get(
+            'https://zlapp.fudan.edu.cn/ncov/wap/fudan/get-info')
         last_info = get_info.json()
 
         print("◉上一次提交日期为:", last_info["d"]["info"]["date"])
+        # 地区从oldInfo中提取
+        last_area = last_info["d"]["oldInfo"]["area"]
+        print("◉上一次提交的地区是:", last_area)
+        if last_area == "其他国家":
+            pass
+        else:
+            position = last_info["d"]["info"]['geo_api_info']
+            position = json_loads(position)
 
-        position = last_info["d"]["info"]['geo_api_info']
-        position = json_loads(position)
-
-        print("◉上一次提交地址为:", position['formattedAddress'])
-        # print("◉上一次提交GPS为", position["position"])
+            print("◉上一次提交地址为:", position['formattedAddress'])
+            # print("◉上一次提交GPS为", position["position"])
         # print(last_info)
         
         # 改为上海时区
@@ -205,28 +206,45 @@ class Zlapp(Fudan):
         }
 
         print("\n\n◉◉提交中")
-
-        geo_api_info = json_loads(self.last_info["geo_api_info"])
+        
         province = self.last_info["province"]
         city = self.last_info["city"]
-        district = geo_api_info["addressComponent"].get("district", "")
+        area = self.last_info["area"]
+        if area == "其他国家":
+            gwszdd = self.last_info["gwszdd"]
+        else:
+            geo_api_info = json_loads(self.last_info["geo_api_info"])
+            district = geo_api_info["addressComponent"].get("district", "")
         
         while(True):
             print("◉正在识别验证码......")
             code = self.validate_code()
             print("◉验证码为:", code)
-            self.last_info.update(
-                {
-                    "tw": "13",
-                    "province": province,
-                    "city": city,
-                    "area": " ".join((province, city, district)),
-                    #"sfzx": "1",  # 是否在校
-                    #"fxyy": "",  # 返校原因
-                    "code": code,
-
-                }
-            )
+            if area == "其他国家":
+                self.last_info.update(
+                    {
+                        "tw": "13",
+                        "province": province,
+                        "city": city,
+                        "area": area,
+                        "gwszdd": gwszdd,
+                        #"sfzx": "1",  # 是否在校
+                        #"fxyy": "",  # 返校原因
+                        "code": code,
+                    }
+                )
+            else:
+                self.last_info.update(
+                    {
+                        "tw": "13",
+                        "province": province,
+                        "city": city,
+                        "area": " ".join((province, city, district)),
+                        #"sfzx": "1",  # 是否在校
+                        #"fxyy": "",  # 返校原因
+                        "code": code,
+                    }
+                )
             # print(self.last_info)
             save = self.session.post(
                 'https://zlapp.fudan.edu.cn/ncov/wap/fudan/save',
@@ -280,7 +298,7 @@ if __name__ == '__main__':
                   'service=https://zlapp.fudan.edu.cn/site/ncov/fudanDaily'
     code_url = "https://zlapp.fudan.edu.cn/backend/default/code"
     daily_fudan = Zlapp(uid, psw,
-                url_login=zlapp_login, url_code=code_url)
+                        url_login=zlapp_login, url_code=code_url)
     daily_fudan.login()
 
     daily_fudan.check()
@@ -288,5 +306,3 @@ if __name__ == '__main__':
     # 再检查一遍
     daily_fudan.check()
     daily_fudan.close(1)
-
-    
