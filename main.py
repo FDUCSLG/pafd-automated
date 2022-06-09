@@ -7,7 +7,6 @@ from sys import exit as sys_exit
 from getpass import getpass
 import re
 import base64
-import easyocr
 import io
 import numpy
 import ddddocr
