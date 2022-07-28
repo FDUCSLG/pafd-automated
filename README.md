@@ -1,4 +1,4 @@
-# 自动填写 PAFD
+## 自动填写 PAFD
 
 update: 如果你是 PAFD 的用户，对技术感兴趣，欢迎加入我们的 slack 组织，用 fudan.edu.cn 或者 m.fudan.edu.cn 的学号邮箱[点击这里注册加入 slack](https://join.slack.com/t/fducslg/signup) （可能需要科学上网工具）
 
