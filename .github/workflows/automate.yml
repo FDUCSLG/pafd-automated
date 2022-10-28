@@ -21,8 +21,9 @@ jobs:
 
       - name: run
         run: |
-          export TZ="Asia/Shanghai"
-          echo $(date)
+          export TZ="Asia/Shanghai";
+          echo "Now: $(date)";
+          echo "Last time: $(cat last-time.txt)";
           if [ $(date +'%Y-%m-%d') != $(cat last-time.txt) ]; 
           then 
             echo "YES"; 
