@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron:  '0 * * * *'
+    - cron:  '0 0-12 * * *'
   workflow_dispatch:
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: run
+      - name: Update info
         run: |
           export TZ="Asia/Shanghai";
           echo "Now: $(date)";
@@ -37,7 +37,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'master'
 
-      - name:
+      - name: Check if I am a victim
         run: |
           echo "The victim is $(cat victim.txt)";
           if [ $(date +'H') != $(cat victim.txt) ]; 
