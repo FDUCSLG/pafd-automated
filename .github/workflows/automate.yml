@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
   
+      - name: Check out code
+        uses: actions/checkout@v2
+        
       - name: run
         run: |
           if [ $(date +'%Y-%m-%d') != "$(cat last-time.txt)" ]; 
@@ -44,9 +47,6 @@ jobs:
         uses: actions-js/push@v1.3
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |
