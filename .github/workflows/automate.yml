@@ -22,11 +22,11 @@ jobs:
           then 
             echo "YES"; 
             echo $(date +'%Y-%m-%d') > last-time.txt;
-            echo $(($RADNOM % 24)) > victim.txt;
+            echo $(($RANDOM % 24)) > victim.txt;
             if [ $(date +'H') != "$(cat victim.txt)" ]; 
             then
               echo "NO";
-              exit 1;
+              exit 0;
             else
               echo "I am the victim";
             fi
@@ -34,7 +34,7 @@ jobs:
             if [ $(date +'H') != "$(cat victim.txt)" ]; 
             then 
               echo "NO";
-              exit 1; 
+              exit 0; 
             else
               echo "I am the victim";
             fi
