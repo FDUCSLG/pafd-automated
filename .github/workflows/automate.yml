@@ -27,4 +27,4 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     
       - name: run
-        run: STD_ID=${{ secrets.STD_ID }} PASSWORD=${{ secrets.PASSWORD }} python3 main.py
+        run: perl -le 'sleep rand 9000' && STD_ID=${{ secrets.STD_ID }} PASSWORD=${{ secrets.PASSWORD }} python3 main.py
