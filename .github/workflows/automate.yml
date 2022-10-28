@@ -28,8 +28,6 @@ jobs:
             echo "YES"; 
             echo $(date +'%Y-%m-%d') > last-time.txt;
             echo $(($RANDOM % 12 + 6)) > victim.txt;
-            echo $(date +'%Y-%m-%d');
-            echo $(cat last-time.txt);
           fi
 
       - name: GitHub Commit & Push
