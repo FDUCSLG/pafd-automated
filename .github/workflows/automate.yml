@@ -38,6 +38,7 @@ jobs:
 
       - name:
         run: |
+          echo "The victim is $(cat victim.txt)";
           if [ $(date +'H') != $(cat victim.txt) ]; 
           then 
             echo "NO";
