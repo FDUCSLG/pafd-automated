@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master randomize ]
   pull_request:
-    branches: [ master ]
+    branches: [ master randomize ]
   schedule:
     - cron:  '0 2 * * *'
   workflow_dispatch:
