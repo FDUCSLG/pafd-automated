@@ -21,6 +21,7 @@ jobs:
 
       - name: run
         run: |
+          echo $(date)
           if [ $(date +'%Y-%m-%d') != "$(cat last-time.txt)" ]; 
           then 
             echo "YES"; 
