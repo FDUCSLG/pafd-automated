@@ -3,7 +3,10 @@ import yaml
 def random_sechedule():
     print(yaml.__version__)
     with open('.github/workflows/automate.yml', 'r') as f:
-        fs = f.read().replace('\non:', '\n"on":')
+        fs = f.read()
+        print(fs)
+        fs = fs.replace('\non:', '\n"on":')
+        print(fs)
         y = yaml.load(fs)
     print(y)
 
