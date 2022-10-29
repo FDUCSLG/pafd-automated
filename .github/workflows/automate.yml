@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron:  '0 0-11 * * *'
+    - cron:  '0 0-13 * * *'
   workflow_dispatch:
 
 jobs:
@@ -29,6 +29,7 @@ jobs:
             echo "Update info and choose a victim"; 
             echo $(date +'%Y-%m-%d') > last-time.txt;
             echo $(($RANDOM % 12 + 8)) > victim.txt;
+            echo 0 > done.txt;
           fi
 
       - name: GitHub Commit & Push
@@ -40,14 +41,20 @@ jobs:
       - name: Check if I am a victim or not
         run: |
           export TZ="Asia/Shanghai";
+          if [ $(cat done.txt) = 1 ]; 
+          then
+            echo "Bye";
+            exit 1;
+          fi
           echo "I am $(date +'%H')";
           echo "The victim is $(cat victim.txt)";
-          if [ $(date +'%H') != $(cat victim.txt) ]; 
+          if [ $(date +'%H') -ge $(cat victim.txt) ]; 
           then 
             echo "Bye";
             exit 1; 
           else
             echo "I am the victim";
+            echo 1 > done.txt;
           fi
 
       - name: Install dependencies
