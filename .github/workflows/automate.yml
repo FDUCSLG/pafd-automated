@@ -26,7 +26,7 @@ jobs:
           echo "Last time: $(cat last-time.txt)";
           if [ $(date +'%Y-%m-%d') != $(cat last-time.txt) ]; 
           then 
-            echo "YES"; 
+            echo "Update info and choose a victim"; 
             echo $(date +'%Y-%m-%d') > last-time.txt;
             echo $(($RANDOM % 12 + 8)) > victim.txt;
           fi
@@ -40,11 +40,11 @@ jobs:
       - name: Check if I am a victim or not
         run: |
           export TZ="Asia/Shanghai";
-          echo "I am $(date +'%H')"
+          echo "I am $(date +'%H')";
           echo "The victim is $(cat victim.txt)";
           if [ $(date +'%H') != $(cat victim.txt) ]; 
           then 
-            echo "NO";
+            echo "Bye";
             exit 1; 
           else
             echo "I am the victim";
