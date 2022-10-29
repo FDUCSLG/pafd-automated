@@ -48,7 +48,7 @@ jobs:
           fi
           echo "I am $(date +'%H')";
           echo "The victim is $(cat victim.txt)";
-          if [ $(date +'%H') -ge $(cat victim.txt) ]; 
+          if [ $(date +'%H') -lt $(cat victim.txt) ]; 
           then 
             echo "Bye";
             exit 1; 
