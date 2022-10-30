@@ -31,7 +31,7 @@ jobs:
           else
             echo "Let's do my jobs ..."
             todayYmd="$(date +'%Y-%m-%d')"
-            echo "$(date -d '$todayYmd +1 day +$(($RANDOM % 6 + 8)) hours')" > timestamp.txt
+            echo "$(date -d "$todayYmd +1 day +$(($RANDOM % 6 + 8)) hours")" > timestamp.txt
           fi
 
       - name: GitHub Commit & Push
