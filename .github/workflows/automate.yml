@@ -24,7 +24,7 @@ jobs:
           export TZ="Asia/Shanghai"
           echo "Now: $(date)"
           echo "Timesptamp: $(cat timestamp.txt)";
-          if [ $(date -d $(date) +'%s') -lt $(date -d $(cat timestamp.txt) +'%s') ];
+          if [ $(date +'%s') -lt $(date -d "$(cat timestamp.txt)" +'%s') ];
           then
             echo "BYE BYE"
             exit 1
