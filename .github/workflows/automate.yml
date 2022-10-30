@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron:  '0 0-13 * * *'
+    - cron:  '0 0-8 * * *'
   workflow_dispatch:
 
 jobs:
@@ -21,40 +21,17 @@ jobs:
 
       - name: Update info
         run: |
-          export TZ="Asia/Shanghai";
-          echo "Now: $(date)";
-          echo "Last time: $(cat last-time.txt)";
-          if [ $(date +'%Y-%m-%d') != $(cat last-time.txt) ]; 
-          then 
-            echo "Update info and choose a victim"; 
-            echo $(date +'%Y-%m-%d') > last-time.txt;
-            echo $(($RANDOM % 12 + 8)) > victim.txt;
-            echo 0 > done.txt;
-          fi
-
-      - name: GitHub Commit & Push
-        uses: actions-js/push@v1.3
-        with: 
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'master'
-
-      - name: Check if I am a victim or not
-        run: |
-          export TZ="Asia/Shanghai";
-          if [ $(cat done.txt) = 1 ]; 
+          export TZ="Asia/Shanghai"
+          echo "Now: $(date)"
+          echo "Timesptamp: $(cat timestamp.txt)";
+          if [ $(date -d $(date) +'%s') -lt $(date -d $(cat timestamp.txt) +'%s') ];
           then
-            echo "Bye";
-            exit 1;
-          fi
-          echo "I am $(date +'%H')";
-          echo "The victim is $(cat victim.txt)";
-          if [ $(date +'%H') -lt $(cat victim.txt) ]; 
-          then 
-            echo "Bye";
-            exit 1; 
+            echo "BYE BYE"
+            exit 1
           else
-            echo "I am the victim";
-            echo 1 > done.txt;
+            echo "Let's do my jobs ..."
+            todayYmd="$(date +'%Y-%m-%d')"
+            echo "$(date -d '$todayYmd +1 day +$(($RANDOM % 6 + 8)) hours')" > timestamp.txt
           fi
 
       - name: GitHub Commit & Push
