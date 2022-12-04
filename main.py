@@ -127,7 +127,7 @@ class Fudan:
         self.logout()
         self.session.close()
         print("◉关闭会话")
-        print("************************")
+        print("***********************")
         sys_exit(exit_code)
 
 
@@ -303,6 +303,6 @@ if __name__ == '__main__':
 
     daily_fudan.check()
     daily_fudan.checkin()
-    # 再检查一遍
+    # 检查一遍
     daily_fudan.check()
     daily_fudan.close(1)
