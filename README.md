@@ -1,5 +1,9 @@
 
 > 致敬所有用户，希望你们能保持反叛的精神，运用智慧——如果无法通过勇气的话，来做一些不一样的事。
+> 
+> <div align="right">R.I.P PAFD, 2020.02 - 2022.12.09</div>
+
+![image](https://user-images.githubusercontent.com/29735669/206698173-decd611f-dc24-4ca1-9a24-e10c3c6fe6b8.png)
 
 
 # 自动填写 PAFD
